@@ -2,6 +2,11 @@ include_guard()
 
 include(FetchContent)
 
+set(BENCHMARK_ENABLE_TESTING OFF)
+set(BENCHMARK_ENABLE_GTEST_TESTS OFF)
+set(BENCHMARK_ENABLE_LTO ON)
+set(BENCHMARK_DOWNLOAD_DEPENDENCIES ON)
+
 FetchContent_Declare(
   google-benchmark
   GIT_REPOSITORY https://github.com/google/benchmark.git
@@ -10,9 +15,5 @@ FetchContent_Declare(
   GIT_PROGRESS TRUE # show progress of download
   USES_TERMINAL_DOWNLOAD TRUE # show progress in ninja generator
 )
-set(BENCHMARK_ENABLE_TESTING OFF)
-set(BENCHMARK_ENABLE_GTEST_TESTS OFF)
-set(BENCHMARK_ENABLE_LTO ON)
-set(BENCHMARK_DOWNLOAD_DEPENDENCIES ON)
 
 FetchContent_MakeAvailable(google-benchmark)

@@ -1,17 +1,23 @@
+#include "args.h"
+
 #include <benchmark/benchmark.h>
+#include <vector>
 
+static void VectorAdd_Naive(benchmark::State &state) {
+  const auto size = 1ULL << static_cast<size_t>(state.range(0));
+  for (auto _ : state) {
+    state.PauseTiming();
+    std::vector<float> a(size, 1);
+    std::vector<float> b(size, 1);
+    std::vector<float> c(size, 0);
+    state.ResumeTiming();
+    for (size_t i = 0; i < size; i++) {
+      c[i] = a[i] + b[i];
+    }
+    benchmark::DoNotOptimize(c);
+  }
 
-static void BM_StringCreation(benchmark::State& state) {
-  for (auto _ : state)
-    std::string empty_string;
+  state.SetBytesProcessed(int64_t(state.iterations()) * int64_t(size));
+  state.counters["size"] = double(size);
 }
-// Register the function as a benchmark
-BENCHMARK(BM_StringCreation);
-
-// Define another benchmark
-static void BM_StringCopy(benchmark::State& state) {
-  std::string x = "hello";
-  for (auto _ : state)
-    std::string copy(x);
-}
-BENCHMARK(BM_StringCopy);
+BENCHMARK(VectorAdd_Naive)->SMALL_ARGS();
