@@ -17,6 +17,7 @@ static void VectorAdd_Naive_C(benchmark::State &state) {
   float *a = nullptr, *b = nullptr, *c = nullptr;
   for (auto _ : state) {
     state.PauseTiming();
+    // free prior data from prior iterations of the loop
     free(a);
     free(b);
     free(c);
@@ -28,7 +29,7 @@ static void VectorAdd_Naive_C(benchmark::State &state) {
     std::fill(c, c + size, 0.0f);
     state.ResumeTiming();
     for (size_t i = 0; i < size; i++) {
-      a[i] = b[i] + c[i];
+      c[i] = a[i] + b[i];
     }
     benchmark::DoNotOptimize(c);
   }
@@ -38,7 +39,10 @@ static void VectorAdd_Naive_C(benchmark::State &state) {
   free(b);
   free(c);
 }
-BENCHMARK(VectorAdd_Naive_C)->SMALL_ARGS()->UseRealTime();
+BENCHMARK(VectorAdd_Naive_C)
+    ->ARGS()
+    ->Unit(benchmark::kMicrosecond)
+    ->UseRealTime();
 
 /// Adds code sequentially using vectors (does not unbox the vector).
 static void VectorAdd_Naive_Vector(benchmark::State &state) {
@@ -57,7 +61,10 @@ static void VectorAdd_Naive_Vector(benchmark::State &state) {
 
   setInfoCounters(state);
 }
-BENCHMARK(VectorAdd_Naive_Vector)->SMALL_ARGS()->UseRealTime();
+BENCHMARK(VectorAdd_Naive_Vector)
+    ->ARGS()
+    ->Unit(benchmark::kMicrosecond)
+    ->UseRealTime();
 
 /// Adds code sequentially using vectors (unboxes the vector).
 static void VectorAdd_Naive_VectorData(benchmark::State &state) {
@@ -77,4 +84,7 @@ static void VectorAdd_Naive_VectorData(benchmark::State &state) {
 
   setInfoCounters(state);
 }
-BENCHMARK(VectorAdd_Naive_VectorData)->SMALL_ARGS()->UseRealTime();
+BENCHMARK(VectorAdd_Naive_VectorData)
+    ->ARGS()
+    ->Unit(benchmark::kMicrosecond)
+    ->UseRealTime();

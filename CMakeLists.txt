@@ -48,11 +48,20 @@ include(AddXSimd)
 include(AddXTensor)
 
 if(MSVC)
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /EHs-c- /GR-")
-  add_compile_definitions(_HAS_EXCEPTIONS=0)
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /GR-")
 else()
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fno-exceptions -fno-rtti")
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fno-rtti")
 endif()
+
+# from https://stackoverflow.com/a/61933129
+function(target_link_libraries_system target scope)
+  set(libs ${ARGN})
+  foreach(lib ${libs})
+    get_target_property(lib_include_dirs ${lib} INTERFACE_INCLUDE_DIRECTORIES)
+    target_include_directories(${target} SYSTEM ${scope} ${lib_include_dirs})
+    target_link_libraries(${target} ${scope} ${lib})
+  endforeach(lib)
+endfunction(target_link_libraries_system)
 
 include_directories(${CMAKE_SOURCE_DIR}/src)
 

@@ -3,10 +3,18 @@
 #include "utils/benchmark.h"
 
 #include <benchmark/benchmark.h>
+#include <vector>
+#include <xsimd/xsimd.hpp>
+#include <xtensor/xtensor_config.hpp>
 
 using ElemType = float;
 
-#define SMALL_ARGS() DenseRange(12, 28, 1)->ArgName("log2(N)")
+static constexpr size_t Alignment = xsimd::default_arch::alignment();
+
+template <typename T>
+using aligned_vector = std::vector<T, xsimd::aligned_allocator<T, Alignment>>;
+
+#define ARGS() DenseRange(24, 25, 1)->ArgName("log2(N)")
 
 static void setInfoCounters(benchmark::State &state) {
   const auto size = 1ULL << static_cast<size_t>(state.range(0));
