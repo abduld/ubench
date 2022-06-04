@@ -1,3 +1,8 @@
+//===- vector-add/naive.cpp ----------------------------------------------===//
+//
+// Performs a naive sequential vector addition.
+//
+//===---------------------------------------------------------------------===//
 #include "args.h"
 #include "utils/benchmark.h"
 
@@ -6,6 +11,7 @@
 
 #include "stdlib.h"
 
+/// Adds code sequentially using native C arrays.
 static void VectorAdd_Naive_C(benchmark::State &state) {
   const auto size = 1ULL << static_cast<size_t>(state.range(0));
   float *a = nullptr, *b = nullptr, *c = nullptr;
@@ -34,6 +40,7 @@ static void VectorAdd_Naive_C(benchmark::State &state) {
 }
 BENCHMARK(VectorAdd_Naive_C)->SMALL_ARGS()->UseRealTime();
 
+/// Adds code sequentially using vectors (does not unbox the vector).
 static void VectorAdd_Naive_Vector(benchmark::State &state) {
   const auto size = 1ULL << static_cast<size_t>(state.range(0));
   for (auto _ : state) {
@@ -52,6 +59,7 @@ static void VectorAdd_Naive_Vector(benchmark::State &state) {
 }
 BENCHMARK(VectorAdd_Naive_Vector)->SMALL_ARGS()->UseRealTime();
 
+/// Adds code sequentially using vectors (unboxes the vector).
 static void VectorAdd_Naive_VectorData(benchmark::State &state) {
   const auto size = 1ULL << static_cast<size_t>(state.range(0));
   for (auto _ : state) {
