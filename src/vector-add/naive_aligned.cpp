@@ -12,7 +12,7 @@
 
 #include "stdlib.h"
 
-/// Adds code sequentially using native C arrays.
+/// Adds code sequentially using native aligned C arrays.
 static void VectorAdd_Naive_Aligned_C(benchmark::State &state) {
   const auto size = 1ULL << static_cast<size_t>(state.range(0));
   float *a = nullptr, *b = nullptr, *c = nullptr;
@@ -52,7 +52,7 @@ BENCHMARK(VectorAdd_Naive_Aligned_C)
     ->Unit(benchmark::kMicrosecond)
     ->UseRealTime();
 
-/// Adds code sequentially using vectors (does not unbox the vector).
+/// Adds code sequentially using aligned vectors (does not unbox the vector).
 static void VectorAdd_Naive_Aligned_Vector(benchmark::State &state) {
   const auto size = 1ULL << static_cast<size_t>(state.range(0));
   for (auto _ : state) {
@@ -78,7 +78,7 @@ BENCHMARK(VectorAdd_Naive_Aligned_Vector)
     ->Unit(benchmark::kMicrosecond)
     ->UseRealTime();
 
-/// Adds code sequentially using vectors (unboxes the vector).
+/// Adds code sequentially using aligned vectors (unboxes the vector).
 static void VectorAdd_Naive_Aligned_VectorData(benchmark::State &state) {
   const auto size = 1ULL << static_cast<size_t>(state.range(0));
   for (auto _ : state) {
