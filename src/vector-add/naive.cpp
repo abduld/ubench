@@ -10,9 +10,10 @@ static void VectorAdd_Naive(benchmark::State &state) {
     std::vector<float> a(size, 1);
     std::vector<float> b(size, 1);
     std::vector<float> c(size, 0);
+    auto aData = a.data(), bData = b.data(), cData = c.data();
     state.ResumeTiming();
     for (size_t i = 0; i < size; i++) {
-      c[i] = a[i] + b[i];
+      cData[i] = aData[i] + bData[i];
     }
     benchmark::DoNotOptimize(c);
   }
