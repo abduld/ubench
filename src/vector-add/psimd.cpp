@@ -21,12 +21,12 @@ static void VectorAdd_PSIMD(benchmark::State &state) {
     free(a);
     free(b);
     free(c);
-    a = reinterpret_cast<float *>(malloc(size * sizeof(ElemType)));
-    b = reinterpret_cast<float *>(malloc(size * sizeof(ElemType)));
-    c = reinterpret_cast<float *>(malloc(size * sizeof(ElemType)));
-    memset(a, 0, size * sizeof(ElemType));
-    memset(b, 0, size * sizeof(ElemType));
-    memset(c, 0, size * sizeof(ElemType));
+    a = reinterpret_cast<float *>(malloc(size * sizeof(ElementType)));
+    b = reinterpret_cast<float *>(malloc(size * sizeof(ElementType)));
+    c = reinterpret_cast<float *>(malloc(size * sizeof(ElementType)));
+    memset(a, 0, size * sizeof(ElementType));
+    memset(b, 0, size * sizeof(ElementType));
+    memset(c, 0, size * sizeof(ElementType));
     state.ResumeTiming();
     for (size_t i = 0; i < size; i++) {
       c[i] = a[i] + b[i];

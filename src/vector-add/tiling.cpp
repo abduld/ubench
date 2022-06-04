@@ -16,23 +16,19 @@ template <int TileFactor>
 static void VectorAdd_Naive_NO_SIMD_Aligned_C_Tiled(benchmark::State &state) {
   const auto size = 1ULL << static_cast<size_t>(state.range(0));
   assert(size % TileFactor == 0 && "size must be a multiple of TileFactor");
-  float *a = nullptr, *b = nullptr, *c = nullptr;
+  float *a = reinterpret_cast<float *>(
+      xsimd::aligned_malloc(size * sizeof(ElementType), Alignment));
+  float *b = reinterpret_cast<float *>(
+      xsimd::aligned_malloc(size * sizeof(ElementType), Alignment));
+  float *c = reinterpret_cast<float *>(
+      xsimd::aligned_malloc(size * sizeof(ElementType), Alignment));
+  memset(a, 0, size * sizeof(ElementType));
+  memset(b, 0, size * sizeof(ElementType));
+  memset(c, 0, size * sizeof(ElementType));
   for (auto _ : state) {
     state.PauseTiming();
-    benchmark::utils::WipeCache();
-    // free prior data from prior iterations of the loop
-    xsimd::aligned_free(a);
-    xsimd::aligned_free(b);
-    xsimd::aligned_free(c);
-    a = reinterpret_cast<float *>(
-        xsimd::aligned_malloc(size * sizeof(ElemType), Alignment));
-    b = reinterpret_cast<float *>(
-        xsimd::aligned_malloc(size * sizeof(ElemType), Alignment));
-    c = reinterpret_cast<float *>(
-        xsimd::aligned_malloc(size * sizeof(ElemType), Alignment));
-    memset(a, 0, size * sizeof(ElemType));
-    memset(b, 0, size * sizeof(ElemType));
-    memset(c, 0, size * sizeof(ElemType));
+    memset(c, 0, size * sizeof(ElementType));
+    benchmark::utils::WipeCache(state);
     state.ResumeTiming();
 #pragma clang loop vectorize(disable) interleave(disable)
     for (size_t i = 0; i < size; i += TileFactor) {
@@ -41,6 +37,7 @@ static void VectorAdd_Naive_NO_SIMD_Aligned_C_Tiled(benchmark::State &state) {
         c[i + ii] = a[i + ii] + b[i + ii];
       }
     }
+    benchmark::ClobberMemory();
     benchmark::DoNotOptimize(a);
     benchmark::DoNotOptimize(b);
     benchmark::DoNotOptimize(c);
@@ -69,29 +66,26 @@ template <int TileFactor>
 static void VectorAdd_Naive_Aligned_C_Tiled(benchmark::State &state) {
   const auto size = 1ULL << static_cast<size_t>(state.range(0));
   assert(size % TileFactor == 0 && "size must be a multiple of TileFactor");
-  float *a = nullptr, *b = nullptr, *c = nullptr;
+  float *a = reinterpret_cast<float *>(
+      xsimd::aligned_malloc(size * sizeof(ElementType), Alignment));
+  float *b = reinterpret_cast<float *>(
+      xsimd::aligned_malloc(size * sizeof(ElementType), Alignment));
+  float *c = reinterpret_cast<float *>(
+      xsimd::aligned_malloc(size * sizeof(ElementType), Alignment));
+  memset(a, 0, size * sizeof(ElementType));
+  memset(b, 0, size * sizeof(ElementType));
+  memset(c, 0, size * sizeof(ElementType));
   for (auto _ : state) {
     state.PauseTiming();
-    benchmark::utils::WipeCache();
-    // free prior data from prior iterations of the loop
-    xsimd::aligned_free(a);
-    xsimd::aligned_free(b);
-    xsimd::aligned_free(c);
-    a = reinterpret_cast<float *>(
-        xsimd::aligned_malloc(size * sizeof(ElemType), Alignment));
-    b = reinterpret_cast<float *>(
-        xsimd::aligned_malloc(size * sizeof(ElemType), Alignment));
-    c = reinterpret_cast<float *>(
-        xsimd::aligned_malloc(size * sizeof(ElemType), Alignment));
-    memset(a, 0, size * sizeof(ElemType));
-    memset(b, 0, size * sizeof(ElemType));
-    memset(c, 0, size * sizeof(ElemType));
+    memset(c, 0, size * sizeof(ElementType));
+    benchmark::utils::WipeCache(state);
     state.ResumeTiming();
     for (size_t i = 0; i < size; i += TileFactor) {
       for (size_t ii = 0; ii < TileFactor; ii++) {
         c[i + ii] = a[i + ii] + b[i + ii];
       }
     }
+    benchmark::ClobberMemory();
     benchmark::DoNotOptimize(a);
     benchmark::DoNotOptimize(b);
     benchmark::DoNotOptimize(c);
@@ -119,23 +113,19 @@ template <int TileFactor, int UnrollFactor>
 static void VectorAdd_Naive_Aligned_C_Tiled_Unroll(benchmark::State &state) {
   const auto size = 1ULL << static_cast<size_t>(state.range(0));
   assert(size % TileFactor == 0 && "size must be a multiple of TileFactor");
-  float *a = nullptr, *b = nullptr, *c = nullptr;
+  float *a = reinterpret_cast<float *>(
+      xsimd::aligned_malloc(size * sizeof(ElementType), Alignment));
+  float *b = reinterpret_cast<float *>(
+      xsimd::aligned_malloc(size * sizeof(ElementType), Alignment));
+  float *c = reinterpret_cast<float *>(
+      xsimd::aligned_malloc(size * sizeof(ElementType), Alignment));
+  memset(a, 0, size * sizeof(ElementType));
+  memset(b, 0, size * sizeof(ElementType));
+  memset(c, 0, size * sizeof(ElementType));
   for (auto _ : state) {
     state.PauseTiming();
-    benchmark::utils::WipeCache();
-    // free prior data from prior iterations of the loop
-    xsimd::aligned_free(a);
-    xsimd::aligned_free(b);
-    xsimd::aligned_free(c);
-    a = reinterpret_cast<float *>(
-        xsimd::aligned_malloc(size * sizeof(ElemType), Alignment));
-    b = reinterpret_cast<float *>(
-        xsimd::aligned_malloc(size * sizeof(ElemType), Alignment));
-    c = reinterpret_cast<float *>(
-        xsimd::aligned_malloc(size * sizeof(ElemType), Alignment));
-    memset(a, 0, size * sizeof(ElemType));
-    memset(b, 0, size * sizeof(ElemType));
-    memset(c, 0, size * sizeof(ElemType));
+    memset(c, 0, size * sizeof(ElementType));
+    benchmark::utils::WipeCache(state);
     state.ResumeTiming();
     for (size_t i = 0; i < size; i += TileFactor) {
 #pragma unroll(UnrollFactor)
@@ -143,6 +133,7 @@ static void VectorAdd_Naive_Aligned_C_Tiled_Unroll(benchmark::State &state) {
         c[i + ii] = a[i + ii] + b[i + ii];
       }
     }
+    benchmark::ClobberMemory();
     benchmark::DoNotOptimize(a);
     benchmark::DoNotOptimize(b);
     benchmark::DoNotOptimize(c);

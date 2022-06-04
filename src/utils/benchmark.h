@@ -18,7 +18,7 @@
 namespace benchmark {
 namespace utils {
 
-uint32_t WipeCache();
+uint32_t WipeCache(benchmark::State &state);
 uint32_t PrefetchToL1(const void *ptr, size_t size);
 
 // Disable support for denormalized numbers in floating-point units.

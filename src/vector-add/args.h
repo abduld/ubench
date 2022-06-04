@@ -7,7 +7,7 @@
 #include <xsimd/xsimd.hpp>
 #include <xtensor/xtensor_config.hpp>
 
-using ElemType = float;
+using ElementType = float;
 
 static constexpr size_t Alignment = xsimd::default_arch::alignment();
 
@@ -27,7 +27,7 @@ static void setInfoCounters(benchmark::State &state) {
       benchmark::Counter(static_cast<double>(state.iterations() * size),
                          benchmark::Counter::kIsRate);
 
-  size_t bytes_per_iteration = size_t(3) * size * sizeof(ElemType);
+  size_t bytes_per_iteration = size_t(3) * size * sizeof(ElementType);
   state.counters["bytes/s"] = benchmark::Counter(
       static_cast<double>(state.iterations() * bytes_per_iteration),
       benchmark::Counter::kIsRate);

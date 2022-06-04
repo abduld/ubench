@@ -69,10 +69,11 @@ uint32_t PrefetchToL1(const void *ptr, size_t size) {
     u8_ptr += step;
     size -= step;
   }
+  benchmark::ClobberMemory();
   return sum;
 }
 
-uint32_t WipeCache() {
+uint32_t WipeCache(benchmark::State &) {
   std::call_once(wipe_buffer_guard, InitWipeBuffer);
   return PrefetchToL1(wipe_buffer, wipe_buffer_size);
 }
