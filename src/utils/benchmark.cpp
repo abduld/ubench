@@ -24,9 +24,8 @@
 #include <cpuinfo.h>
 
 #include <xnnpack.h>
-#include <xnnpack/allocator.h>
 
-#include "bench/utils.h"
+#include "utils/benchmark.h"
 
 static void *wipe_buffer = nullptr;
 static size_t wipe_buffer_size = 0;
@@ -298,16 +297,6 @@ bool CheckAVX512SKX(benchmark::State &state) {
     return false;
   }
   return true;
-}
-
-CodeMemoryHelper::CodeMemoryHelper() {
-  status = xnn_allocate_code_memory(&buffer, XNN_DEFAULT_CODE_BUFFER_SIZE);
-}
-
-CodeMemoryHelper::~CodeMemoryHelper() {
-  if (status == xnn_status_success) {
-    xnn_release_code_memory(&buffer);
-  }
 }
 
 } // namespace utils
