@@ -24,9 +24,9 @@ static void VectorAdd_PSIMD(benchmark::State &state) {
     a = reinterpret_cast<float *>(malloc(size * sizeof(ElemType)));
     b = reinterpret_cast<float *>(malloc(size * sizeof(ElemType)));
     c = reinterpret_cast<float *>(malloc(size * sizeof(ElemType)));
-    std::fill(a, a + size, 1.0f);
-    std::fill(b, b + size, 1.0f);
-    std::fill(c, c + size, 0.0f);
+    memset(a, 0, size * sizeof(ElemType));
+    memset(b, 0, size * sizeof(ElemType));
+    memset(c, 0, size * sizeof(ElemType));
     state.ResumeTiming();
     for (size_t i = 0; i < size; i++) {
       c[i] = a[i] + b[i];

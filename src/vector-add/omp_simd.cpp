@@ -30,9 +30,9 @@ static void VectorAdd_Naive_OMP_SIMD(benchmark::State &state) {
         xsimd::aligned_malloc(size * sizeof(ElemType), Alignment));
     c = reinterpret_cast<float *>(
         xsimd::aligned_malloc(size * sizeof(ElemType), Alignment));
-    std::fill(a, a + size, 1.0f);
-    std::fill(b, b + size, 1.0f);
-    std::fill(c, c + size, 0.0f);
+    memset(a, 0, size * sizeof(ElemType));
+    memset(b, 0, size * sizeof(ElemType));
+    memset(c, 0, size * sizeof(ElemType));
     state.ResumeTiming();
 #pragma omp simd simdlen(SIMDWidth)
     for (size_t i = 0; i < size; i++) {
@@ -81,9 +81,9 @@ static void VectorAdd_Naive_OMP_SIMD_Tiled(benchmark::State &state) {
         xsimd::aligned_malloc(size * sizeof(ElemType), Alignment));
     c = reinterpret_cast<float *>(
         xsimd::aligned_malloc(size * sizeof(ElemType), Alignment));
-    std::fill(a, a + size, 1.0f);
-    std::fill(b, b + size, 1.0f);
-    std::fill(c, c + size, 0.0f);
+    memset(a, 0, size * sizeof(ElemType));
+    memset(b, 0, size * sizeof(ElemType));
+    memset(c, 0, size * sizeof(ElemType));
     state.ResumeTiming();
     for (size_t i = 0; i < size; i += TileFactor) {
 #pragma omp simd simdlen(SIMDWidth)

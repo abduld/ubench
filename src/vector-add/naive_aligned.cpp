@@ -13,7 +13,7 @@
 #include "stdlib.h"
 
 /// Adds code sequentially using native aligned C arrays.
-static void VectorAdd_Naive_Aligned_C(benchmark::State &state) {
+static void VectorAdd_Naive_NO_SIMD_Aligned_C(benchmark::State &state) {
   const auto size = 1ULL << static_cast<size_t>(state.range(0));
   float *a = nullptr, *b = nullptr, *c = nullptr;
   for (auto _ : state) {
@@ -29,10 +29,11 @@ static void VectorAdd_Naive_Aligned_C(benchmark::State &state) {
         xsimd::aligned_malloc(size * sizeof(ElemType), Alignment));
     c = reinterpret_cast<float *>(
         xsimd::aligned_malloc(size * sizeof(ElemType), Alignment));
-    std::fill(a, a + size, 1.0f);
-    std::fill(b, b + size, 1.0f);
-    std::fill(c, c + size, 0.0f);
+    memset(a, 0, size * sizeof(ElemType));
+    memset(b, 0, size * sizeof(ElemType));
+    memset(c, 0, size * sizeof(ElemType));
     state.ResumeTiming();
+#pragma clang loop vectorize(disable) interleave(disable)
     for (size_t i = 0; i < size; i++) {
       c[i] = a[i] + b[i];
     }
@@ -47,13 +48,13 @@ static void VectorAdd_Naive_Aligned_C(benchmark::State &state) {
   xsimd::aligned_free(b);
   xsimd::aligned_free(c);
 }
-BENCHMARK(VectorAdd_Naive_Aligned_C)
+BENCHMARK(VectorAdd_Naive_NO_SIMD_Aligned_C)
     ->ARGS()
     ->Unit(benchmark::kMicrosecond)
     ->UseRealTime();
 
 /// Adds code sequentially using aligned vectors (does not unbox the vector).
-static void VectorAdd_Naive_Aligned_Vector(benchmark::State &state) {
+static void VectorAdd_Naive_NO_SIMD_Aligned_Vector(benchmark::State &state) {
   const auto size = 1ULL << static_cast<size_t>(state.range(0));
   for (auto _ : state) {
     state.PauseTiming();
@@ -62,6 +63,7 @@ static void VectorAdd_Naive_Aligned_Vector(benchmark::State &state) {
     aligned_vector<ElemType> b(size, 1);
     aligned_vector<ElemType> c(size, 0);
     state.ResumeTiming();
+#pragma clang loop vectorize(disable) interleave(disable)
     for (size_t i = 0; i < size; i++) {
       c[i] = a[i] + b[i];
     }
@@ -73,13 +75,14 @@ static void VectorAdd_Naive_Aligned_Vector(benchmark::State &state) {
   state.counters["alignment"] = static_cast<double>(Alignment);
   setInfoCounters(state);
 }
-BENCHMARK(VectorAdd_Naive_Aligned_Vector)
+BENCHMARK(VectorAdd_Naive_NO_SIMD_Aligned_Vector)
     ->ARGS()
     ->Unit(benchmark::kMicrosecond)
     ->UseRealTime();
 
 /// Adds code sequentially using aligned vectors (unboxes the vector).
-static void VectorAdd_Naive_Aligned_VectorData(benchmark::State &state) {
+static void
+VectorAdd_Naive_NO_SIMD_Aligned_VectorData(benchmark::State &state) {
   const auto size = 1ULL << static_cast<size_t>(state.range(0));
   for (auto _ : state) {
     state.PauseTiming();
@@ -89,6 +92,7 @@ static void VectorAdd_Naive_Aligned_VectorData(benchmark::State &state) {
     aligned_vector<ElemType> c(size, 0);
     auto aData = a.data(), bData = b.data(), cData = c.data();
     state.ResumeTiming();
+#pragma clang loop vectorize(disable) interleave(disable)
     for (size_t i = 0; i < size; i++) {
       cData[i] = aData[i] + bData[i];
     }
@@ -100,7 +104,7 @@ static void VectorAdd_Naive_Aligned_VectorData(benchmark::State &state) {
   state.counters["alignment"] = static_cast<double>(Alignment);
   setInfoCounters(state);
 }
-BENCHMARK(VectorAdd_Naive_Aligned_VectorData)
+BENCHMARK(VectorAdd_Naive_NO_SIMD_Aligned_VectorData)
     ->ARGS()
     ->Unit(benchmark::kMicrosecond)
     ->UseRealTime();

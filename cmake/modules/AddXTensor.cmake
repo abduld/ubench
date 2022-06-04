@@ -10,7 +10,7 @@ FetchContent_Declare(
 )
 
 set(XTENSOR_USE_XSIMD ON)
-set(XTENSOR_USE_OPENMP ON)
+set(XTENSOR_USE_OPENMP OFF)
 set(XTENSOR_DEFAULT_ALLOCATOR ON)
 
 FetchContent_MakeAvailable(XTensor)

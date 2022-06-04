@@ -47,7 +47,7 @@ include(AddXTL)
 include(AddXSimd)
 include(AddXTensor)
 
-find_package(OpenMP REQUIRED)
+find_package(OpenMP)
 
 if(CMAKE_C_COMPILER MATCHES ".*(clang|emcc).*" OR CMAKE_C_COMPILER_ID MATCHES
                                                   ".*(Clang|emcc).*")
@@ -68,10 +68,8 @@ if(IS_GCC_LIKE AND NOT COMPILER_IS_CLANG)
 endif()
 
 if(COMPILER_IS_CLANG)
-  add_definitions(-DCOMPILER_IS_CLANG=1)
   add_definitions(-Rpass=loop-vectorize)
   add_definitions(-ferror-limit=1)
-  message(STATUS "Using the Clang compiler")
 endif(COMPILER_IS_CLANG)
 
 if(MSVC)
@@ -79,8 +77,8 @@ if(MSVC)
 else()
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fno-rtti")
   set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -Wall -march=native")
-  set(CMAKE_CXX_FLAGS_DEBUG
-      "${CMAKE_CXX_FLAGS_DEBUG} -Wall -fno-omit-frame-pointer -O0")
+  set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Wall
+-fno-omit-frame-pointer -O0")
 endif()
 
 # from https://stackoverflow.com/a/61933129

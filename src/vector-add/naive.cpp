@@ -12,7 +12,7 @@
 #include "stdlib.h"
 
 /// Adds code sequentially using native C arrays.
-static void VectorAdd_Naive_C(benchmark::State &state) {
+static void VectorAdd_Naive_NO_SIMD_C(benchmark::State &state) {
   const auto size = 1ULL << static_cast<size_t>(state.range(0));
   float *a = nullptr, *b = nullptr, *c = nullptr;
   for (auto _ : state) {
@@ -25,10 +25,11 @@ static void VectorAdd_Naive_C(benchmark::State &state) {
     a = reinterpret_cast<float *>(malloc(size * sizeof(ElemType)));
     b = reinterpret_cast<float *>(malloc(size * sizeof(ElemType)));
     c = reinterpret_cast<float *>(malloc(size * sizeof(ElemType)));
-    std::fill(a, a + size, 1.0f);
-    std::fill(b, b + size, 1.0f);
-    std::fill(c, c + size, 0.0f);
+    memset(a, 0, size * sizeof(ElemType));
+    memset(b, 0, size * sizeof(ElemType));
+    memset(c, 0, size * sizeof(ElemType));
     state.ResumeTiming();
+#pragma clang loop vectorize(disable) interleave(disable)
     for (size_t i = 0; i < size; i++) {
       c[i] = a[i] + b[i];
     }
@@ -42,13 +43,13 @@ static void VectorAdd_Naive_C(benchmark::State &state) {
   free(b);
   free(c);
 }
-BENCHMARK(VectorAdd_Naive_C)
+BENCHMARK(VectorAdd_Naive_NO_SIMD_C)
     ->ARGS()
     ->Unit(benchmark::kMicrosecond)
     ->UseRealTime();
 
 /// Adds code sequentially using vectors (does not unbox the vector).
-static void VectorAdd_Naive_Vector(benchmark::State &state) {
+static void VectorAdd_Naive_NO_SIMD_Vector(benchmark::State &state) {
   const auto size = 1ULL << static_cast<size_t>(state.range(0));
   for (auto _ : state) {
     state.PauseTiming();
@@ -57,6 +58,7 @@ static void VectorAdd_Naive_Vector(benchmark::State &state) {
     std::vector<ElemType> b(size, 1);
     std::vector<ElemType> c(size, 0);
     state.ResumeTiming();
+#pragma clang loop vectorize(disable) interleave(disable)
     for (size_t i = 0; i < size; i++) {
       c[i] = a[i] + b[i];
     }
@@ -67,13 +69,13 @@ static void VectorAdd_Naive_Vector(benchmark::State &state) {
 
   setInfoCounters(state);
 }
-BENCHMARK(VectorAdd_Naive_Vector)
+BENCHMARK(VectorAdd_Naive_NO_SIMD_Vector)
     ->ARGS()
     ->Unit(benchmark::kMicrosecond)
     ->UseRealTime();
 
 /// Adds code sequentially using vectors (unboxes the vector).
-static void VectorAdd_Naive_VectorData(benchmark::State &state) {
+static void VectorAdd_Naive_NO_SIMD_VectorData(benchmark::State &state) {
   const auto size = 1ULL << static_cast<size_t>(state.range(0));
   for (auto _ : state) {
     state.PauseTiming();
@@ -83,6 +85,7 @@ static void VectorAdd_Naive_VectorData(benchmark::State &state) {
     std::vector<ElemType> c(size, 0);
     auto aData = a.data(), bData = b.data(), cData = c.data();
     state.ResumeTiming();
+#pragma clang loop vectorize(disable) interleave(disable)
     for (size_t i = 0; i < size; i++) {
       cData[i] = aData[i] + bData[i];
     }
@@ -93,7 +96,7 @@ static void VectorAdd_Naive_VectorData(benchmark::State &state) {
 
   setInfoCounters(state);
 }
-BENCHMARK(VectorAdd_Naive_VectorData)
+BENCHMARK(VectorAdd_Naive_NO_SIMD_VectorData)
     ->ARGS()
     ->Unit(benchmark::kMicrosecond)
     ->UseRealTime();
