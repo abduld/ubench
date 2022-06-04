@@ -14,7 +14,7 @@ static constexpr size_t Alignment = xsimd::default_arch::alignment();
 template <typename T>
 using aligned_vector = std::vector<T, xsimd::aligned_allocator<T, Alignment>>;
 
-#define ARGS() DenseRange(23, 23, 1)->ArgName("log2(N)")
+#define ARGS() DenseRange(20, 24, 1)->ArgName("log2(N)")
 
 static void setInfoCounters(benchmark::State &state) {
   const auto size = 1ULL << static_cast<size_t>(state.range(0));
