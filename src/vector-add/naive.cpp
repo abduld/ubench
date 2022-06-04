@@ -1,4 +1,5 @@
 #include "args.h"
+#include "utils/benchmark.h"
 
 #include <benchmark/benchmark.h>
 #include <vector>
@@ -20,9 +21,19 @@ static void VectorAdd_Naive(benchmark::State &state) {
     benchmark::DoNotOptimize(c);
   }
 
-  state.SetBytesProcessed(
-      int64_t(state.iterations() * size * sizeof(ElemType)));
-  state.SetItemsProcessed(int64_t(state.iterations() * size));
-  state.counters["size"] = double(size);
+  const uint64_t cpu_frequency = benchmark::utils::GetCurrentCpuFrequency();
+  if (cpu_frequency != 0) {
+    state.counters["cpufreq"] = cpu_frequency;
+  }
+
+  const size_t num_elements_per_iteration = size;
+  state.counters["num_elements"] = benchmark::Counter(
+      uint64_t(state.iterations()) * num_elements_per_iteration,
+      benchmark::Counter::kIsRate);
+
+  const size_t bytes_per_iteration = 3 * size * sizeof(ElemType);
+  state.counters["bytes"] =
+      benchmark::Counter(uint64_t(state.iterations()) * bytes_per_iteration,
+                         benchmark::Counter::kIsRate);
 }
-BENCHMARK(VectorAdd_Naive)->SMALL_ARGS();
+BENCHMARK(VectorAdd_Naive)->SMALL_ARGS()->UseRealTime();
