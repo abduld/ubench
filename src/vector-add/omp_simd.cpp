@@ -44,6 +44,7 @@ static void VectorAdd_Naive_OMP_SIMD(benchmark::State &state) {
   }
 
   state.counters["alignment"] = static_cast<double>(Alignment);
+  state.counters["simd_width"] = static_cast<double>(SIMDWidth);
   setInfoCounters(state);
   xsimd::aligned_free(a);
   xsimd::aligned_free(b);
@@ -97,6 +98,8 @@ static void VectorAdd_Naive_OMP_SIMD_Tiled(benchmark::State &state) {
   }
 
   state.counters["alignment"] = static_cast<double>(Alignment);
+  state.counters["tile_factor"] = static_cast<double>(TileFactor);
+  state.counters["simd_width"] = static_cast<double>(SIMDWidth);
   setInfoCounters(state);
   xsimd::aligned_free(a);
   xsimd::aligned_free(b);
