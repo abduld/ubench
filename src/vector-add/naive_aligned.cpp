@@ -18,6 +18,7 @@ static void VectorAdd_Naive_Aligned_C(benchmark::State &state) {
   float *a = nullptr, *b = nullptr, *c = nullptr;
   for (auto _ : state) {
     state.PauseTiming();
+    benchmark::utils::WipeCache();
     // free prior data from prior iterations of the loop
     xsimd::aligned_free(a);
     xsimd::aligned_free(b);
@@ -56,6 +57,7 @@ static void VectorAdd_Naive_Aligned_Vector(benchmark::State &state) {
   const auto size = 1ULL << static_cast<size_t>(state.range(0));
   for (auto _ : state) {
     state.PauseTiming();
+    benchmark::utils::WipeCache();
     aligned_vector<ElemType> a(size, 1);
     aligned_vector<ElemType> b(size, 1);
     aligned_vector<ElemType> c(size, 0);
@@ -81,6 +83,7 @@ static void VectorAdd_Naive_Aligned_VectorData(benchmark::State &state) {
   const auto size = 1ULL << static_cast<size_t>(state.range(0));
   for (auto _ : state) {
     state.PauseTiming();
+    benchmark::utils::WipeCache();
     aligned_vector<ElemType> a(size, 1);
     aligned_vector<ElemType> b(size, 1);
     aligned_vector<ElemType> c(size, 0);
