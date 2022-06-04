@@ -8,13 +8,8 @@ set(GOOGLEBENCHMARK_SOURCE_DIR ${CMAKE_BINARY_DIR}/_deps/google-benchmark-src)
 FetchContent_Declare(
   XNNPACK
   GIT_REPOSITORY https://github.com/google/XNNPACK
-  GIT_TAG main
-  GIT_PROGRESS TRUE)
+  GIT_SHALLOW TRUE # get only last version
+  GIT_PROGRESS TRUE # show progress of download
+  USES_TERMINAL_DOWNLOAD TRUE # show progress in ninja generator
+)
 FetchContent_MakeAvailable(XNNPACK)
-
-add_subdirectory("${XNNPACK_SOURCE_DIR}" "${XNNPACK_BINARY_DIR}"
-                 EXCLUDE_FROM_ALL)
-
-include_directories(
-  AFTER "${PTHREADPOOL_SOURCE_DIR}/include" "${FP16_SOURCE_DIR}/include"
-  "${XNNPACK_SOURCE_DIR}/include" "${CPUINFO_SOURCE_DIR}/")
