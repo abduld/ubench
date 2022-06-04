@@ -6,7 +6,7 @@
 
 using ElemType = float;
 
-#define SMALL_ARGS() DenseRange(8, 33, 1)->ArgName("log2(N)")
+#define SMALL_ARGS() DenseRange(12, 28, 1)->ArgName("log2(N)")
 
 static void setInfoCounters(benchmark::State &state) {
   const auto size = 1ULL << static_cast<size_t>(state.range(0));
