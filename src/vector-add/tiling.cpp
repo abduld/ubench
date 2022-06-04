@@ -150,7 +150,7 @@ static void VectorAdd_Naive_Aligned_C_Tiled_Unroll(benchmark::State &state) {
 
   state.counters["alignment"] = static_cast<double>(Alignment);
   state.counters["tile_factor"] = static_cast<double>(TileFactor);
-  state.counters["unroll_factor"] = static_cast<double>(TileFactor);
+  state.counters["unroll_factor"] = static_cast<double>(UnrollFactor);
   setInfoCounters(state);
   xsimd::aligned_free(a);
   xsimd::aligned_free(b);
