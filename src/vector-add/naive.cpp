@@ -4,8 +4,6 @@
 #include <benchmark/benchmark.h>
 #include <vector>
 
-using ElemType = float;
-
 static void VectorAdd_Naive(benchmark::State &state) {
   const auto size = 1ULL << static_cast<size_t>(state.range(0));
   for (auto _ : state) {
@@ -21,16 +19,6 @@ static void VectorAdd_Naive(benchmark::State &state) {
     benchmark::DoNotOptimize(c);
   }
 
-  if (uint64_t cpufreq = benchmark::utils::GetCurrentCpuFrequency())
-    state.counters["cpufreq"] = static_cast<double>(cpufreq);
-
-  state.counters["num_elements"] =
-      benchmark::Counter(static_cast<double>(state.iterations() * size),
-                         benchmark::Counter::kIsRate);
-
-  const size_t bytes_per_iteration = 3 * size * sizeof(ElemType);
-  state.counters["bytes"] = benchmark::Counter(
-      static_cast<double>(state.iterations() * bytes_per_iteration),
-      benchmark::Counter::kIsRate);
+  setInfoCounters(state);
 }
 BENCHMARK(VectorAdd_Naive)->SMALL_ARGS()->UseRealTime();
