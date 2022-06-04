@@ -31,6 +31,8 @@ static void VectorAdd_Naive_C(benchmark::State &state) {
     for (size_t i = 0; i < size; i++) {
       c[i] = a[i] + b[i];
     }
+    benchmark::DoNotOptimize(a);
+    benchmark::DoNotOptimize(b);
     benchmark::DoNotOptimize(c);
   }
 
@@ -56,6 +58,8 @@ static void VectorAdd_Naive_Vector(benchmark::State &state) {
     for (size_t i = 0; i < size; i++) {
       c[i] = a[i] + b[i];
     }
+    benchmark::DoNotOptimize(a);
+    benchmark::DoNotOptimize(b);
     benchmark::DoNotOptimize(c);
   }
 
@@ -79,6 +83,8 @@ static void VectorAdd_Naive_VectorData(benchmark::State &state) {
     for (size_t i = 0; i < size; i++) {
       cData[i] = aData[i] + bData[i];
     }
+    benchmark::DoNotOptimize(a);
+    benchmark::DoNotOptimize(b);
     benchmark::DoNotOptimize(c);
   }
 
