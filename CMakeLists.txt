@@ -71,6 +71,7 @@ if(COMPILER_IS_CLANG)
   add_definitions(-DCOMPILER_IS_CLANG=1)
   add_definitions(-Rpass=loop-vectorize)
   add_definitions(-ferror-limit=1)
+  message(STATUS "Using the Clang compiler")
 endif(COMPILER_IS_CLANG)
 
 if(MSVC)
