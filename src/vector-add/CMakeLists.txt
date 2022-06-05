@@ -1,8 +1,6 @@
-# set(SRCS naive.cpp naive_aligned.cpp tiling.cpp)
-# append_list_if(OpenMP_CXX_FOUND omp_simd.cpp SRCS)
-# append_list_if(COMPILER_IS_CLANG clang_simd.cpp SRCS)
-
-set(SRCS psimd.cpp xsimd.cpp)
+set(SRCS naive.cpp naive_aligned.cpp tiling.cpp psimd.cpp xsimd.cpp)
+append_list_if(OpenMP_CXX_FOUND omp_simd.cpp SRCS)
+append_list_if(COMPILER_IS_CLANG clang_simd.cpp SRCS)
 if(TARGET Eigen3::Eigen)
   list(APPEND SRCS eigen.cpp)
 endif()
