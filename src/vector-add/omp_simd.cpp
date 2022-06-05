@@ -8,7 +8,7 @@
 
 /// Adds code sequentially using native aligned C arrays.
 template <int SIMDWidth>
-static void VectorAdd_Naive_OMP_SIMD(benchmark::State &state) {
+static void VectorAdd_OMP_SIMD(benchmark::State &state) {
   const auto size = 1ULL << static_cast<size_t>(state.range(0));
   float *a = reinterpret_cast<float *>(
       xsimd::aligned_malloc(size * sizeof(ElementType), Alignment));
@@ -41,22 +41,22 @@ static void VectorAdd_Naive_OMP_SIMD(benchmark::State &state) {
   xsimd::aligned_free(b);
   xsimd::aligned_free(c);
 }
-BENCHMARK_TEMPLATE(VectorAdd_Naive_OMP_SIMD, 2)
+BENCHMARK_TEMPLATE(VectorAdd_OMP_SIMD, 2)
     ->ARGS()
     ->Unit(benchmark::kMicrosecond)
     ->UseRealTime();
-BENCHMARK_TEMPLATE(VectorAdd_Naive_OMP_SIMD, 4)
+BENCHMARK_TEMPLATE(VectorAdd_OMP_SIMD, 4)
     ->ARGS()
     ->Unit(benchmark::kMicrosecond)
     ->UseRealTime();
-BENCHMARK_TEMPLATE(VectorAdd_Naive_OMP_SIMD, 8)
+BENCHMARK_TEMPLATE(VectorAdd_OMP_SIMD, 8)
     ->ARGS()
     ->Unit(benchmark::kMicrosecond)
     ->UseRealTime();
 
 /// Adds code sequentially using native aligned C arrays.
 template <int TileFactor, int SIMDWidth>
-static void VectorAdd_Naive_OMP_SIMD_Tiled(benchmark::State &state) {
+static void VectorAdd_OMP_SIMD_Tiled(benchmark::State &state) {
   const auto size = 1ULL << static_cast<size_t>(state.range(0));
   assert(size % TileFactor == 0 && "size must be a multiple of TileFactor");
   float *a = reinterpret_cast<float *>(
@@ -95,7 +95,7 @@ static void VectorAdd_Naive_OMP_SIMD_Tiled(benchmark::State &state) {
 }
 
 #define BENCHMARK_OMP_SIMD_TILED(TILE_FACTOR, SIMD_WIDTH)                      \
-  BENCHMARK_TEMPLATE(VectorAdd_Naive_OMP_SIMD_Tiled, TILE_FACTOR, SIMD_WIDTH)  \
+  BENCHMARK_TEMPLATE(VectorAdd_OMP_SIMD_Tiled, TILE_FACTOR, SIMD_WIDTH)        \
       ->ARGS()                                                                 \
       ->Unit(benchmark::kMicrosecond)                                          \
       ->UseRealTime();

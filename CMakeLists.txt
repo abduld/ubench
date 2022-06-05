@@ -48,6 +48,7 @@ include(AddXSimd)
 include(AddXTensor)
 
 find_package(OpenMP)
+find_package(Eigen3 NO_MODULE)
 
 if(CMAKE_C_COMPILER MATCHES ".*(clang|emcc).*" OR CMAKE_C_COMPILER_ID MATCHES
                                                   ".*(Clang|emcc).*")

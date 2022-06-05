@@ -7,7 +7,7 @@
 #include "stdlib.h"
 
 template <int SIMDWidth, int InterleaveCount>
-static void VectorAdd_Naive_CLANG_SIMD(benchmark::State &state) {
+static void VectorAdd_CLANG_SIMD(benchmark::State &state) {
   const auto size = 1ULL << static_cast<size_t>(state.range(0));
   float *a = reinterpret_cast<float *>(
       xsimd::aligned_malloc(size * sizeof(ElementType), Alignment));
@@ -42,21 +42,21 @@ static void VectorAdd_Naive_CLANG_SIMD(benchmark::State &state) {
   xsimd::aligned_free(c);
 }
 
-#define VectorAdd_Naive_CLANG_SIMD(SIMD_WIDTH, INTERLEAVE_COUNT)               \
-  BENCHMARK_TEMPLATE(VectorAdd_Naive_CLANG_SIMD, SIMD_WIDTH, INTERLEAVE_COUNT) \
+#define VectorAdd_CLANG_SIMD(SIMD_WIDTH, INTERLEAVE_COUNT)                     \
+  BENCHMARK_TEMPLATE(VectorAdd_CLANG_SIMD, SIMD_WIDTH, INTERLEAVE_COUNT)       \
       ->ARGS()                                                                 \
       ->Unit(benchmark::kMicrosecond)                                          \
       ->UseRealTime();
 
-VectorAdd_Naive_CLANG_SIMD(2, 1);
-VectorAdd_Naive_CLANG_SIMD(4, 1);
-VectorAdd_Naive_CLANG_SIMD(4, 2);
-VectorAdd_Naive_CLANG_SIMD(8, 1);
-VectorAdd_Naive_CLANG_SIMD(8, 2);
-VectorAdd_Naive_CLANG_SIMD(8, 2);
+VectorAdd_CLANG_SIMD(2, 1);
+VectorAdd_CLANG_SIMD(4, 1);
+VectorAdd_CLANG_SIMD(4, 2);
+VectorAdd_CLANG_SIMD(8, 1);
+VectorAdd_CLANG_SIMD(8, 2);
+VectorAdd_CLANG_SIMD(8, 2);
 
 template <int TileFactor, int SIMDWidth, int InterleaveCount>
-static void VectorAdd_Naive_CLANG_SIMD_Tiled(benchmark::State &state) {
+static void VectorAdd_CLANG_SIMD_Tiled(benchmark::State &state) {
   const auto size = 1ULL << static_cast<size_t>(state.range(0));
   assert(size % TileFactor == 0 && "size must be a multiple of TileFactor");
   float *a = reinterpret_cast<float *>(
@@ -96,8 +96,8 @@ static void VectorAdd_Naive_CLANG_SIMD_Tiled(benchmark::State &state) {
 }
 
 #define BENCHMARK_CLANG_SIMD_TILED(TILE_FACTOR, SIMD_WIDTH, INTERLEAVE_COUNT)  \
-  BENCHMARK_TEMPLATE(VectorAdd_Naive_CLANG_SIMD_Tiled, TILE_FACTOR,            \
-                     SIMD_WIDTH, INTERLEAVE_COUNT)                             \
+  BENCHMARK_TEMPLATE(VectorAdd_CLANG_SIMD_Tiled, TILE_FACTOR, SIMD_WIDTH,      \
+                     INTERLEAVE_COUNT)                                         \
       ->ARGS()                                                                 \
       ->Unit(benchmark::kMicrosecond)                                          \
       ->UseRealTime();

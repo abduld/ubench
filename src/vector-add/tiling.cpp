@@ -7,7 +7,7 @@
 #include "stdlib.h"
 
 template <int TileFactor>
-static void VectorAdd_Naive_NO_SIMD_Aligned_C_Tiled(benchmark::State &state) {
+static void VectorAdd_NO_SIMD_Aligned_C_Tiled(benchmark::State &state) {
   const auto size = 1ULL << static_cast<size_t>(state.range(0));
   assert(size % TileFactor == 0 && "size must be a multiple of TileFactor");
   float *a = reinterpret_cast<float *>(
@@ -45,19 +45,19 @@ static void VectorAdd_Naive_NO_SIMD_Aligned_C_Tiled(benchmark::State &state) {
   xsimd::aligned_free(c);
 }
 
-#define BENCHMARK_VectorAdd_Naive_NO_SIMD_Aligned_C_Tiled(TileFactor)          \
-  BENCHMARK_TEMPLATE(VectorAdd_Naive_NO_SIMD_Aligned_C_Tiled, TileFactor)      \
+#define BENCHMARK_VectorAdd_NO_SIMD_Aligned_C_Tiled(TileFactor)                \
+  BENCHMARK_TEMPLATE(VectorAdd_NO_SIMD_Aligned_C_Tiled, TileFactor)            \
       ->ARGS()                                                                 \
       ->Unit(benchmark::kMicrosecond)                                          \
       ->UseRealTime()
-BENCHMARK_VectorAdd_Naive_NO_SIMD_Aligned_C_Tiled(4);
-BENCHMARK_VectorAdd_Naive_NO_SIMD_Aligned_C_Tiled(8);
-BENCHMARK_VectorAdd_Naive_NO_SIMD_Aligned_C_Tiled(16);
-BENCHMARK_VectorAdd_Naive_NO_SIMD_Aligned_C_Tiled(32);
-BENCHMARK_VectorAdd_Naive_NO_SIMD_Aligned_C_Tiled(64);
+BENCHMARK_VectorAdd_NO_SIMD_Aligned_C_Tiled(4);
+BENCHMARK_VectorAdd_NO_SIMD_Aligned_C_Tiled(8);
+BENCHMARK_VectorAdd_NO_SIMD_Aligned_C_Tiled(16);
+BENCHMARK_VectorAdd_NO_SIMD_Aligned_C_Tiled(32);
+BENCHMARK_VectorAdd_NO_SIMD_Aligned_C_Tiled(64);
 
 template <int TileFactor>
-static void VectorAdd_Naive_Aligned_C_Tiled(benchmark::State &state) {
+static void VectorAdd_Aligned_C_Tiled(benchmark::State &state) {
   const auto size = 1ULL << static_cast<size_t>(state.range(0));
   assert(size % TileFactor == 0 && "size must be a multiple of TileFactor");
   float *a = reinterpret_cast<float *>(
@@ -92,19 +92,19 @@ static void VectorAdd_Naive_Aligned_C_Tiled(benchmark::State &state) {
   xsimd::aligned_free(b);
   xsimd::aligned_free(c);
 }
-#define BENCHMARK_VectorAdd_Naive_Aligned_C_Tiled(TileFactor)                  \
-  BENCHMARK_TEMPLATE(VectorAdd_Naive_Aligned_C_Tiled, TileFactor)              \
+#define BENCHMARK_VectorAdd_Aligned_C_Tiled(TileFactor)                        \
+  BENCHMARK_TEMPLATE(VectorAdd_Aligned_C_Tiled, TileFactor)                    \
       ->ARGS()                                                                 \
       ->Unit(benchmark::kMicrosecond)                                          \
       ->UseRealTime()
-BENCHMARK_VectorAdd_Naive_Aligned_C_Tiled(4);
-BENCHMARK_VectorAdd_Naive_Aligned_C_Tiled(8);
-BENCHMARK_VectorAdd_Naive_Aligned_C_Tiled(16);
-BENCHMARK_VectorAdd_Naive_Aligned_C_Tiled(32);
-BENCHMARK_VectorAdd_Naive_Aligned_C_Tiled(64);
+BENCHMARK_VectorAdd_Aligned_C_Tiled(4);
+BENCHMARK_VectorAdd_Aligned_C_Tiled(8);
+BENCHMARK_VectorAdd_Aligned_C_Tiled(16);
+BENCHMARK_VectorAdd_Aligned_C_Tiled(32);
+BENCHMARK_VectorAdd_Aligned_C_Tiled(64);
 
 template <int TileFactor, int UnrollFactor>
-static void VectorAdd_Naive_Aligned_C_Tiled_Unroll(benchmark::State &state) {
+static void VectorAdd_Aligned_C_Tiled_Unroll(benchmark::State &state) {
   const auto size = 1ULL << static_cast<size_t>(state.range(0));
   assert(size % TileFactor == 0 && "size must be a multiple of TileFactor");
   float *a = reinterpret_cast<float *>(
@@ -141,18 +141,17 @@ static void VectorAdd_Naive_Aligned_C_Tiled_Unroll(benchmark::State &state) {
   xsimd::aligned_free(b);
   xsimd::aligned_free(c);
 }
-#define BENCHMARK_VectorAdd_Naive_Aligned_C_Tiled_Unroll(TileFactor,           \
-                                                         UnrollFactor)         \
-  BENCHMARK_TEMPLATE(VectorAdd_Naive_Aligned_C_Tiled_Unroll, TileFactor,       \
+#define BENCHMARK_VectorAdd_Aligned_C_Tiled_Unroll(TileFactor, UnrollFactor)   \
+  BENCHMARK_TEMPLATE(VectorAdd_Aligned_C_Tiled_Unroll, TileFactor,             \
                      UnrollFactor)                                             \
       ->ARGS()                                                                 \
       ->Unit(benchmark::kMicrosecond)                                          \
       ->UseRealTime()
-BENCHMARK_VectorAdd_Naive_Aligned_C_Tiled_Unroll(4, 2);
-BENCHMARK_VectorAdd_Naive_Aligned_C_Tiled_Unroll(4, 4);
-BENCHMARK_VectorAdd_Naive_Aligned_C_Tiled_Unroll(8, 4);
-BENCHMARK_VectorAdd_Naive_Aligned_C_Tiled_Unroll(8, 8);
-BENCHMARK_VectorAdd_Naive_Aligned_C_Tiled_Unroll(16, 8);
-BENCHMARK_VectorAdd_Naive_Aligned_C_Tiled_Unroll(32, 8);
-BENCHMARK_VectorAdd_Naive_Aligned_C_Tiled_Unroll(64, 8);
-BENCHMARK_VectorAdd_Naive_Aligned_C_Tiled_Unroll(64, 32);
+BENCHMARK_VectorAdd_Aligned_C_Tiled_Unroll(4, 2);
+BENCHMARK_VectorAdd_Aligned_C_Tiled_Unroll(4, 4);
+BENCHMARK_VectorAdd_Aligned_C_Tiled_Unroll(8, 4);
+BENCHMARK_VectorAdd_Aligned_C_Tiled_Unroll(8, 8);
+BENCHMARK_VectorAdd_Aligned_C_Tiled_Unroll(16, 8);
+BENCHMARK_VectorAdd_Aligned_C_Tiled_Unroll(32, 8);
+BENCHMARK_VectorAdd_Aligned_C_Tiled_Unroll(64, 8);
+BENCHMARK_VectorAdd_Aligned_C_Tiled_Unroll(64, 32);
