@@ -1,19 +1,23 @@
 import dataclasses
 import json
 import logging
+from collections import defaultdict
 from pathlib import Path
+
+import matplotlib.pyplot as plt
+import numpy as np
+import pandas as pd
+import seaborn as sns
+import streamlit as st
+from bokeh.models import ColumnDataSource
+from bokeh.palettes import Spectral6
+from bokeh.plotting import figure
+from bokeh.transform import factor_cmap
 
 CURRENT_FILE = Path(__file__).resolve()
 CURRENT_DIRECTORY = CURRENT_FILE.parent.resolve()
 TOP_DIRECTORY = CURRENT_DIRECTORY.parent.resolve()
 RESULTS_DIRECTORY = TOP_DIRECTORY / "results"
-
-
-import json
-
-import numpy as np
-import pandas as pd
-import streamlit as st
 
 
 def remove_prefix(text, prefix):
@@ -79,6 +83,17 @@ def separate_benchmark_data(benchmarks):
         if real_time != "real_time":
             continue
         name = remove_prefix(name, "VectorAdd_")
+        if "<" in name:
+            parts = name.split("<")
+            name = parts[0]
+        if "alignment" in benchmark:
+            name += f";alignment={int(benchmark['alignment'])}"
+        if "tile_factor" in benchmark:
+            name += f";tile_factor={int(benchmark['tile_factor'])}"
+        if "unroll_factor" in benchmark:
+            name += f";unroll_factor={int(benchmark['unroll_factor'])}"
+        if "simd_width" in benchmark:
+            name += f";simd_width={int(benchmark['simd_width'])}"
         size = int(remove_prefix(size, "log2(N):"))
         if name not in separated_benchmarks:
             separated_benchmarks[name] = {}
@@ -86,55 +101,72 @@ def separate_benchmark_data(benchmarks):
         if size not in separated_benchmarks[name]:
             separated_benchmarks[name][size] = []
         # print("aggregate_name" in benchmark, "  ", real_time, "   ", benchmark)
-        separated_benchmarks[name][size].append(benchmark["real_time"])
+        separated_benchmarks[name][size].append(benchmark["bytes/s"] / (2**30))
 
     return separated_benchmarks
 
 
 separated_benchmarks = separate_benchmark_data(benchmark_data["benchmarks"])
 
-print(separated_benchmarks)
+sizes = defaultdict(dict)
 
-# # Store specifically the data from BM_Multiplication and BM_TransposedMultiplication
-# multiplication = []
-# transposed_multiplication = []
-# matrix_sizes = []
+st.subheader("Comparison")
+for benchmark_name, benchmark_data in separated_benchmarks.items():
+    for size, data in benchmark_data.items():
+        sizes[size][benchmark_name] = np.mean(data)
+chart_data = pd.DataFrame(sizes)
+st.dataframe(chart_data)
 
-# # Create a chart for each benchmark based on the size of the matrix
+for size in sizes.keys():
+    st.subheader(f"Size {size}")
+    vals = sizes.get(size)
+    x = list(vals.keys())
+    y = list(vals.values())
+
+    data = ColumnDataSource(data=dict(name=x, values=y))
+    print(data)
+
+    p = figure(x_range=x, height=350, toolbar_location=None, title="Fruit Counts")
+
+    p.vbar(
+        x="name",
+        top="counts",
+        width=0.9,
+        source=data,
+        line_width=2,
+        legend_field="name",
+        line_color="white",
+        fill_color=factor_cmap("name", palette=Spectral6, factors=x),
+    )
+
+    st.bokeh_chart(p, use_container_width=True)
+
+# st.subheader("Benchmark results")
 # for benchmark_name, benchmark_data in separated_benchmarks.items():
 #     st.header(f"{benchmark_name}")
 
 #     # Create a chart for each operation where the x axis is the size of the matrix and the y axis is the time
-#     matrix_size = []
-#     real_time = []
+#     sizes = []
+#     bytes_per_sec = []
 
 #     current_operation = 0
 
+#     print(benchmark_data)
+
 #     for size, data in benchmark_data.items():
-#         matrix_size.append(int(size))
+#         sizes.append(int(size))
 
 #         operation_times = []
-#         for operation, time in data.items():
+#         for time in data:
 #             operation_times.append(time * 10e-9)
 
-#         real_time.append(operation_times)
+#         bytes_per_sec.append(operation_times)
 
 #         current_operation += 1
 
-#     # Store the data for the comparison
-#     matrix_sizes = matrix_size
-
-#     chart_data = pd.DataFrame(
-#         real_time, index=matrix_size, columns=["mean", "median", "stddev"]
-#     )
+#     chart_data = pd.DataFrame(bytes_per_sec, index=sizes)
 
 #     st.line_chart(chart_data)
-
-#     # If the benchmark is BM_Multiplication or BM_TransposedMultiplication, store the data
-#     if benchmark_name == "BM_Multiplication":
-#         multiplication = real_time
-#     elif benchmark_name == "BM_TransposedMultiplication":
-#         transposed_multiplication = real_time
 
 
 # st.header("Comparison")
