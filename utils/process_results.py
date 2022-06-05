@@ -110,126 +110,63 @@ separated_benchmarks = separate_benchmark_data(benchmark_data["benchmarks"])
 
 sizes = defaultdict(dict)
 
-st.subheader("Comparison")
-for benchmark_name, benchmark_data in separated_benchmarks.items():
-    for size, data in benchmark_data.items():
-        sizes[size][benchmark_name] = np.mean(data)
-chart_data = pd.DataFrame(sizes)
-st.dataframe(chart_data)
-
-for size in sizes.keys():
-    st.subheader(f"Size {size}")
-    vals = sizes.get(size)
-    x = list(vals.keys())
-    y = list(vals.values())
-
-    data = ColumnDataSource(data=dict(name=x, values=y))
-    print(data)
-
-    p = figure(x_range=x, height=350, toolbar_location=None, title="Fruit Counts")
-
-    p.vbar(
-        x="name",
-        top="counts",
-        width=0.9,
-        source=data,
-        line_width=2,
-        legend_field="name",
-        line_color="white",
-        fill_color=factor_cmap("name", palette=Spectral6, factors=x),
-    )
-
-    st.bokeh_chart(p, use_container_width=True)
-
-# st.subheader("Benchmark results")
+# st.subheader("Comparison")
 # for benchmark_name, benchmark_data in separated_benchmarks.items():
-#     st.header(f"{benchmark_name}")
-
-#     # Create a chart for each operation where the x axis is the size of the matrix and the y axis is the time
-#     sizes = []
-#     bytes_per_sec = []
-
-#     current_operation = 0
-
-#     print(benchmark_data)
-
 #     for size, data in benchmark_data.items():
-#         sizes.append(int(size))
+#         sizes[size][benchmark_name] = np.mean(data)
+# chart_data = pd.DataFrame(sizes)
+# st.dataframe(chart_data)
 
-#         operation_times = []
-#         for time in data:
-#             operation_times.append(time * 10e-9)
-
-#         bytes_per_sec.append(operation_times)
-
-#         current_operation += 1
-
-#     chart_data = pd.DataFrame(bytes_per_sec, index=sizes)
-
-#     st.line_chart(chart_data)
-
-
-# st.header("Comparison")
-
-# col1, col2 = st.columns(2)
-
-# with col1:
-#     st.subheader("Normal multiplication real time")
-#     st.line_chart(
-#         pd.DataFrame(
-#             multiplication, index=matrix_sizes, columns=["mean", "median", "stddev"]
-#         )
-#     )
-
-# with col2:
-#     st.subheader("Transposed multiplication real time")
-#     st.line_chart(
-#         pd.DataFrame(
-#             transposed_multiplication,
-#             index=matrix_sizes,
-#             columns=["mean", "median", "stddev"],
-#         )
-#     )
-
-# st.header("Speedup")
-
-
-# is_inverted = st.checkbox("Invert the speedup")
-
-# title = (
-#     "To calculate the speedup from both benchmarks, we need to divide the time of the"
-#     f" {'normal' if is_inverted else 'transposed'} multiplication by the time of the"
-#     f" {'tranposed' if is_inverted else 'normal'} multiplication."
+# p = figure(width=600, height=300, title="Years vs mpg without jittering")
+# p.xgrid.grid_line_color = None
+# p.xaxis.ticker = list(sizes.keys())
+# source = ColumnDataSource(
+#     data=dict(name=list(sizes.keys()), values=list(sizes.values()))
 # )
+# p.scatter(x="name", y="values", size=9, alpha=0.4, source=source)
+# st.bokeh_chart(p, use_container_width=True)
 
-# st.write(title)
+# for size in sizes.keys():
+#     st.subheader(f"Size {size}")
+#     vals = sizes.get(size)
+#     x = list(vals.keys())
+#     y = list(vals.values())
 
-# if is_inverted:
-#     st.latex(
-#         r"""
-#         speedup = \frac{normal\_time}{transposed\_time}
-#         """
+#     data = ColumnDataSource(data=dict(name=x, values=y))
+#     print(data)
+
+#     p = figure(x_range=x, height=350, toolbar_location=None, title="Fruit Counts")
+
+#     p.vbar(
+#         x="name",
+#         top="counts",
+#         width=0.9,
+#         source=data,
+#         line_width=2,
+#         legend_field="name",
+#         line_color="white",
+#         fill_color=factor_cmap("name", palette=Spectral6, factors=x),
 #     )
-# else:
-#     st.latex(
-#         r"""
-#         speedup = \frac{transposed\_time}{normal\_time}
-#         """
-#     )
 
-# # Calculate the speedup for each matrix size
-# speedup = []
-# for index, size in enumerate(matrix_sizes):
-#     mult = multiplication[index][0]
-#     transp = transposed_multiplication[index][0]
-#     result = (mult / transp) if is_inverted else (transp / mult)
-#     speedup.append(result)
+#     st.bokeh_chart(p, use_container_width=True)
 
-# # Plot the speedup
-# st.line_chart(
-#     pd.DataFrame(
-#         speedup,
-#         index=matrix_sizes,
-#         columns=["speedup"],
-#     )
-# )
+st.subheader("Benchmark results")
+for benchmark_name, benchmark_data in separated_benchmarks.items():
+    st.header(f"{benchmark_name}")
+
+    # Create a chart for each operation where the x axis is the size of the matrix and the y axis is the time
+    sizes = []
+    bytes_per_sec = []
+
+    for size, data in benchmark_data.items():
+        sizes.append(int(size))
+
+        operation_times = []
+        for time in data:
+            operation_times.append(time)
+
+        bytes_per_sec.append(operation_times)
+
+    chart_data = pd.DataFrame(bytes_per_sec, index=sizes)
+
+    st.line_chart(chart_data)
