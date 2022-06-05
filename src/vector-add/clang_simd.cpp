@@ -54,6 +54,8 @@ VectorAdd_CLANG_SIMD(4, 2);
 VectorAdd_CLANG_SIMD(8, 1);
 VectorAdd_CLANG_SIMD(8, 2);
 VectorAdd_CLANG_SIMD(8, 2);
+VectorAdd_CLANG_SIMD(8, 4);
+VectorAdd_CLANG_SIMD(8, 4);
 
 template <int TileFactor, int SIMDWidth, int InterleaveCount>
 static void VectorAdd_CLANG_SIMD_Tiled(benchmark::State &state) {
