@@ -1,9 +1,3 @@
-//===- vector-add/naive.cpp ----------------------------------------------===//
-//
-// Performs a naive sequential vector addition. The allocations are aligned,
-// however.
-//
-//===---------------------------------------------------------------------===//
 #include "args.h"
 #include "utils/benchmark.h"
 
@@ -56,6 +50,7 @@ static void VectorAdd_Naive_CLANG_SIMD(benchmark::State &state) {
 
 VectorAdd_Naive_CLANG_SIMD(2, 1);
 VectorAdd_Naive_CLANG_SIMD(4, 1);
+VectorAdd_Naive_CLANG_SIMD(4, 2);
 VectorAdd_Naive_CLANG_SIMD(8, 1);
 VectorAdd_Naive_CLANG_SIMD(8, 2);
 VectorAdd_Naive_CLANG_SIMD(8, 2);
@@ -108,16 +103,25 @@ static void VectorAdd_Naive_CLANG_SIMD_Tiled(benchmark::State &state) {
       ->UseRealTime();
 
 BENCHMARK_CLANG_SIMD_TILED(2, 2, 1);
+BENCHMARK_CLANG_SIMD_TILED(16, 4, 1);
+BENCHMARK_CLANG_SIMD_TILED(16, 4, 1);
+BENCHMARK_CLANG_SIMD_TILED(32, 4, 1);
 BENCHMARK_CLANG_SIMD_TILED(16, 8, 1);
 BENCHMARK_CLANG_SIMD_TILED(16, 8, 1);
 BENCHMARK_CLANG_SIMD_TILED(32, 8, 1);
 
 BENCHMARK_CLANG_SIMD_TILED(2, 2, 2);
+BENCHMARK_CLANG_SIMD_TILED(16, 4, 2);
+BENCHMARK_CLANG_SIMD_TILED(16, 4, 2);
+BENCHMARK_CLANG_SIMD_TILED(32, 4, 2);
 BENCHMARK_CLANG_SIMD_TILED(16, 8, 2);
 BENCHMARK_CLANG_SIMD_TILED(16, 8, 2);
 BENCHMARK_CLANG_SIMD_TILED(32, 8, 2);
 
 BENCHMARK_CLANG_SIMD_TILED(2, 2, 4);
+BENCHMARK_CLANG_SIMD_TILED(16, 4, 4);
+BENCHMARK_CLANG_SIMD_TILED(16, 4, 4);
+BENCHMARK_CLANG_SIMD_TILED(32, 4, 4);
 BENCHMARK_CLANG_SIMD_TILED(16, 8, 4);
 BENCHMARK_CLANG_SIMD_TILED(16, 8, 4);
 BENCHMARK_CLANG_SIMD_TILED(32, 8, 4);

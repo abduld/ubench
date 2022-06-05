@@ -1,9 +1,3 @@
-//===- vector-add/naive.cpp ----------------------------------------------===//
-//
-// Performs a naive sequential vector addition. The allocations are aligned,
-// however.
-//
-//===---------------------------------------------------------------------===//
 #include "args.h"
 #include "utils/benchmark.h"
 
@@ -107,6 +101,9 @@ static void VectorAdd_Naive_OMP_SIMD_Tiled(benchmark::State &state) {
       ->UseRealTime();
 
 BENCHMARK_OMP_SIMD_TILED(2, 2);
+BENCHMARK_OMP_SIMD_TILED(16, 4);
+BENCHMARK_OMP_SIMD_TILED(16, 4);
+BENCHMARK_OMP_SIMD_TILED(32, 4);
 BENCHMARK_OMP_SIMD_TILED(16, 8);
 BENCHMARK_OMP_SIMD_TILED(16, 8);
 BENCHMARK_OMP_SIMD_TILED(32, 8);

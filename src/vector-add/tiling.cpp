@@ -1,9 +1,3 @@
-//===- vector-add/naive.cpp ----------------------------------------------===//
-//
-// Performs a naive sequential vector addition. The allocations are aligned,
-// however.
-//
-//===---------------------------------------------------------------------===//
 #include "args.h"
 #include "utils/benchmark.h"
 
