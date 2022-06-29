@@ -17,8 +17,13 @@ cmake -S .. -G Ninja
 cmake --build build
 ```
 
-## Run
+## Run GEMM
 
 ```
-build/bin/ubench --benchmark_out=../results/output.json --benchmark_out_format=json --benchmark_repetitions=5
+build/bin/ubench --benchmark_out=../results/output.json --benchmark_out_format=json
+```
+## Run Vector Add
+
+```
+build/bin/ubench --benchmark_out=../results/output.json --benchmark_out_format=json
 ```

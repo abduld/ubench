@@ -46,7 +46,9 @@ include(AddXTL)
 include(AddXSimd)
 include(AddXTensor)
 
+
 find_package(OpenMP)
+find_package(BLAS REQUIRED)
 find_package(Eigen3 NO_MODULE)
 
 if(CMAKE_C_COMPILER MATCHES ".*(clang|emcc).*" OR CMAKE_C_COMPILER_ID MATCHES
@@ -72,11 +74,29 @@ if(COMPILER_IS_CLANG)
   add_definitions(-ferror-limit=1)
 endif(COMPILER_IS_CLANG)
 
+macro(append_if condition value)
+  if(${condition})
+    foreach(str ${ARGN})
+      set(value "${str} ${value}")
+    endforeach()
+  endif()
+endmacro()
+
+macro(append_list_if condition value)
+  if(${condition})
+    foreach(list ${ARGN})
+      list(APPEND ${list} ${value})
+    endforeach()
+  endif()
+endmacro()
+
 if(MSVC)
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /GR-")
 else()
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fno-rtti")
-  set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -Wall -march=native")
+  check_cxx_compiler_flag("-march=native" SUPPORTS_MARCH_NATIVE)
+  set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -Wall")
+  append_if(SUPPORTS_MARCH_NATIVE "-march=native" CMAKE_CXX_FLAGS_RELEASE)
   set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Wall
 -fno-omit-frame-pointer -O0")
 endif()
@@ -91,13 +111,6 @@ function(target_link_libraries_system target scope)
   endforeach(lib)
 endfunction(target_link_libraries_system)
 
-macro(append_list_if condition value)
-  if(${condition})
-    foreach(list ${ARGN})
-      list(APPEND ${list} ${value})
-    endforeach()
-  endif()
-endmacro()
 
 include_directories(${CMAKE_SOURCE_DIR}/src)
 
