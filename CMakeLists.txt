@@ -23,6 +23,10 @@ if (POLICY CMP0077)
   cmake_policy(SET CMP0077 OLD)
 endif()
 
+if (POLICY CMP0079)
+  cmake_policy(SET CMP0079 NEW)
+endif()
+
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED YES)
 
@@ -49,6 +53,7 @@ include(AddXNNPACK)
 include(AddXTL)
 include(AddXSimd)
 include(AddXTensor)
+include(AddRuy)
 
 
 find_package(OpenMP)
