@@ -94,7 +94,7 @@ static void VectorAdd_PSIMD_Tiled(benchmark::State &state) {
   BENCHMARK_TEMPLATE(VectorAdd_PSIMD_Tiled, TILE_FACTOR)                       \
       ->ARGS()                                                                 \
       ->Unit(benchmark::kMicrosecond)                                          \
-      ->UseRealTime();
+      ->UseRealTime()
 
 BENCHMARK_PSIMD_TILED(4);
 BENCHMARK_PSIMD_TILED(8);
@@ -147,7 +147,7 @@ static void VectorAdd_PSIMD_Tiled_Unroll(benchmark::State &state) {
   BENCHMARK_TEMPLATE(VectorAdd_PSIMD_Tiled_Unroll, TILE_FACTOR)                \
       ->ARGS()                                                                 \
       ->Unit(benchmark::kMicrosecond)                                          \
-      ->UseRealTime();
+      ->UseRealTime()
 
 BENCHMARK_PSIMD_TILED_UNROLL(4);
 BENCHMARK_PSIMD_TILED_UNROLL(8);

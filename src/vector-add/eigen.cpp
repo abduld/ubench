@@ -19,10 +19,13 @@ static void VectorAdd_Eigen(benchmark::State &state) {
   memset(a, 0, size * sizeof(ElementType));
   memset(b, 0, size * sizeof(ElementType));
   memset(c, 0, size * sizeof(ElementType));
-  static_assert(Alignment == 32 || Alignment == 64 || Alignment == 128,
-                "Alignment must be 32, 64, or 128");
+  static_assert(Alignment == 8 || Alignment == 16 || Alignment == 32 ||
+                    Alignment == 64 || Alignment == 128,
+                "Alignment must be 8, 16, 32, 64, or 128");
   Eigen::Map<Eigen::RowVectorXf,
-             Alignment == 32   ? Eigen::AlignmentType::Aligned32
+             Alignment == 8    ? Eigen::AlignmentType::Aligned8
+             : Alignment == 16 ? Eigen::AlignmentType::Aligned16
+             : Alignment == 32 ? Eigen::AlignmentType::Aligned32
              : Alignment == 64 ? Eigen::AlignmentType::Aligned64
                                : Eigen::AlignmentType::Aligned128>
       aEigen(a, Eigen::Index(size)), bEigen(b, Eigen::Index(size)),

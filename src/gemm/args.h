@@ -24,11 +24,11 @@ static void setInfoCounters(benchmark::State &state) {
   state.counters["flops"] = benchmark::Counter(
       double(2 * M * N * K), benchmark::Counter::kAvgThreadsRate);
   state.counters["num_elements"] = double(size);
-  state.counters["num_elements/s"] =
-      benchmark::Counter(static_cast<double>(state.iterations() * size),
-                         benchmark::Counter::kIsRate);
+  state.counters["num_elements/s"] = benchmark::Counter(
+      static_cast<double>(state.iterations()) * static_cast<double>(size),
+      benchmark::Counter::kIsRate);
 
-  size_t bytes_per_iteration = size * sizeof(ElementType);
+  size_t bytes_per_iteration = size_t(size) * sizeof(ElementType);
   state.counters["bytes/s"] = benchmark::Counter(
       static_cast<double>(state.iterations() * bytes_per_iteration),
       benchmark::Counter::kIsRate);

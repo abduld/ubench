@@ -96,7 +96,7 @@ static void VectorAdd_XSIMD_Tiled(benchmark::State &state) {
   BENCHMARK_TEMPLATE(VectorAdd_XSIMD_Tiled, TILE_FACTOR)                       \
       ->ARGS()                                                                 \
       ->Unit(benchmark::kMicrosecond)                                          \
-      ->UseRealTime();
+      ->UseRealTime()
 
 BENCHMARK_XSIMD_TILED(4);
 BENCHMARK_XSIMD_TILED(8);
@@ -150,7 +150,7 @@ static void VectorAdd_XSIMD_Tiled_Unroll(benchmark::State &state) {
   BENCHMARK_TEMPLATE(VectorAdd_XSIMD_Tiled_Unroll, TILE_FACTOR)                \
       ->ARGS()                                                                 \
       ->Unit(benchmark::kMicrosecond)                                          \
-      ->UseRealTime();
+      ->UseRealTime()
 
 BENCHMARK_XSIMD_TILED_UNROLL(4);
 BENCHMARK_XSIMD_TILED_UNROLL(8);
