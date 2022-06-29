@@ -8,7 +8,7 @@ static void cblasGEMMImpl(const CBLAS_TRANSPOSE TransA,
                           const int N, const int K, const float alpha,
                           const float *A, const float *B, const float beta,
                           float *C) {
-  static_assert(std::is_same_v(float, ElementType),
+  static_assert(std::is_same_v<float, ElementType>,
                 "ElementType must be float");
   const int lda = (TransA == CblasNoTrans) ? K : M;
   const int ldb = (TransB == CblasNoTrans) ? N : K;
@@ -21,9 +21,9 @@ static void GEMM_CLBLAS(benchmark::State &state) {
   const ElementType one{1};
   const ElementType zero{0};
 
-  const auto M = state.range(0);
-  const auto N = state.range(1);
-  const auto K = state.range(2);
+  const auto M = static_cast<size_t>(state.range(0));
+  const auto N = static_cast<size_t>(state.range(1));
+  const auto K = static_cast<size_t>(state.range(2));
 
   ElementType alpha{one};
   ElementType beta{zero};
@@ -36,7 +36,8 @@ static void GEMM_CLBLAS(benchmark::State &state) {
   std::fill(c.begin(), c.end(), zero);
 
   for (auto _ : state) {
-    cblasGEMMImpl(CblasNoTrans, CblasNoTrans, M, N, K, alpha, a.data(),
+    cblasGEMMImpl(CblasNoTrans, CblasNoTrans, static_cast<int>(M),
+                  static_cast<int>(N), static_cast<int>(K), alpha, a.data(),
                   b.data(), beta, c.data());
     benchmark::DoNotOptimize(c.data());
   }

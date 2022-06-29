@@ -98,7 +98,7 @@ static void VectorAdd_OMP_SIMD_Tiled(benchmark::State &state) {
   BENCHMARK_TEMPLATE(VectorAdd_OMP_SIMD_Tiled, TILE_FACTOR, SIMD_WIDTH)        \
       ->ARGS()                                                                 \
       ->Unit(benchmark::kMicrosecond)                                          \
-      ->UseRealTime();
+      ->UseRealTime()
 
 BENCHMARK_OMP_SIMD_TILED(2, 2);
 BENCHMARK_OMP_SIMD_TILED(16, 4);

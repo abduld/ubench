@@ -19,6 +19,14 @@ if(POLICY CMP0116)
   cmake_policy(SET CMP0116 OLD)
 endif()
 
+if (POLICY CMP0077)
+  cmake_policy(SET CMP0077 OLD)
+endif()
+
+if (POLICY CMP0079)
+  cmake_policy(SET CMP0079 NEW)
+endif()
+
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED YES)
 
@@ -45,6 +53,7 @@ include(AddXNNPACK)
 include(AddXTL)
 include(AddXSimd)
 include(AddXTensor)
+include(AddRuy)
 
 
 find_package(OpenMP)
@@ -93,7 +102,7 @@ endmacro()
 if(MSVC)
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /GR-")
 else()
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fno-rtti")
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fno-rtti -Wno-unknown-pragmas")
   check_cxx_compiler_flag("-march=native" SUPPORTS_MARCH_NATIVE)
   set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -Wall")
   append_if(SUPPORTS_MARCH_NATIVE "-march=native" CMAKE_CXX_FLAGS_RELEASE)

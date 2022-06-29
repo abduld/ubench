@@ -6,6 +6,7 @@
 
 #include "stdlib.h"
 
+#ifdef COMPILER_IS_CLANG
 template <int TileFactor>
 static void VectorAdd_NO_SIMD_Aligned_C_Tiled(benchmark::State &state) {
   const auto size = 1ULL << static_cast<size_t>(state.range(0));
@@ -55,6 +56,7 @@ BENCHMARK_VectorAdd_NO_SIMD_Aligned_C_Tiled(8);
 BENCHMARK_VectorAdd_NO_SIMD_Aligned_C_Tiled(16);
 BENCHMARK_VectorAdd_NO_SIMD_Aligned_C_Tiled(32);
 BENCHMARK_VectorAdd_NO_SIMD_Aligned_C_Tiled(64);
+#endif // COMPILER_IS_CLANG
 
 template <int TileFactor>
 static void VectorAdd_Aligned_C_Tiled(benchmark::State &state) {
