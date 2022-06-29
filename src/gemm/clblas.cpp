@@ -21,9 +21,9 @@ static void GEMM_CLBLAS(benchmark::State &state) {
   const ElementType one{1};
   const ElementType zero{0};
 
-  const size_t M = static_cast<size_t>(state.range(0));
-  const size_t N = static_cast<size_t>(state.range(1));
-  const size_t K = static_cast<size_t>(state.range(2));
+  const auto M = static_cast<size_t>(state.range(0));
+  const auto N = static_cast<size_t>(state.range(1));
+  const auto K = static_cast<size_t>(state.range(2));
 
   ElementType alpha{one};
   ElementType beta{zero};
