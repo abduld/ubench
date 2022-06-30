@@ -24,6 +24,8 @@ static void setInfoCounters(benchmark::State &state) {
 
 // M, N, K
 
+// can also extend the args bellow to include params from
+// https://github.com/google/XNNPACK/blob/a9992250ee0f58ee9b26f8e4b7c2c82f358d3b34/bench/gemm.h
 #define ARGS()                                                                 \
   ARG_INCEPTION_V3()                                                           \
       ->ARG_MOBILENET_V3()                                                     \
