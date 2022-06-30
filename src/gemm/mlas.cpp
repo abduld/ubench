@@ -28,4 +28,8 @@ static void GEMM_MLAS(benchmark::State &state) {
   setInfoCounters(state);
 }
 
-BENCHMARK(GEMM_MLAS)->ARGS()->Unit(benchmark::kMicrosecond)->UseRealTime();
+BENCHMARK(GEMM_MLAS)
+    ->ARGS()
+    ->ArgNames({"M", "N", "K"})
+    ->Unit(benchmark::kMicrosecond)
+    ->UseRealTime();

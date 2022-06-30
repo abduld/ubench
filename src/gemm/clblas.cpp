@@ -45,4 +45,8 @@ static void GEMM_CLBLAS(benchmark::State &state) {
   setInfoCounters(state);
 }
 
-BENCHMARK(GEMM_CLBLAS)->ARGS()->Unit(benchmark::kMicrosecond)->UseRealTime();
+BENCHMARK(GEMM_CLBLAS)
+    ->ARGS()
+    ->ArgNames({"M", "N", "K"})
+    ->Unit(benchmark::kMicrosecond)
+    ->UseRealTime();

@@ -42,4 +42,8 @@ static void GEMM_Ruy(benchmark::State &state) {
   setInfoCounters(state);
 }
 
-BENCHMARK(GEMM_Ruy)->ARGS()->Unit(benchmark::kMicrosecond)->UseRealTime();
+BENCHMARK(GEMM_Ruy)
+    ->ARGS()
+    ->ArgNames({"M", "N", "K"})
+    ->Unit(benchmark::kMicrosecond)
+    ->UseRealTime();

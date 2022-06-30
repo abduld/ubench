@@ -20,4 +20,8 @@ static void GEMM_Eigen(benchmark::State &state) {
   setInfoCounters(state);
 }
 
-BENCHMARK(GEMM_Eigen)->ARGS()->Unit(benchmark::kMicrosecond)->UseRealTime();
+BENCHMARK(GEMM_Eigen)
+    ->ARGS()
+    ->ArgNames({"M", "N", "K"})
+    ->Unit(benchmark::kMicrosecond)
+    ->UseRealTime();
