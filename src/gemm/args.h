@@ -1,6 +1,6 @@
 #pragma once
 
-#include "utils/benchmark.h"
+// #include "utils/benchmark.h"
 
 #include <benchmark/benchmark.h>
 #include <vector>
@@ -12,8 +12,8 @@ static void setInfoCounters(benchmark::State &state) {
   const auto N = state.range(1);
   const auto K = state.range(2);
 
-  if (uint64_t cpufreq = benchmark::utils::GetCurrentCpuFrequency())
-    state.counters["cpufreq"] = static_cast<double>(cpufreq);
+  // if (uint64_t cpufreq = benchmark::utils::GetCurrentCpuFrequency())
+  //   state.counters["cpufreq"] = static_cast<double>(cpufreq);
 
   state.counters["M"] = double(M);
   state.counters["N"] = double(N);

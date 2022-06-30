@@ -1,4 +1,4 @@
-add_subdirectory(utils)
+# add_subdirectory(utils)
 # add_subdirectory(memcpy)
 # add_subdirectory(vector-add)
 add_subdirectory(gemm)
