@@ -49,11 +49,11 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 include(AddPwropt)
 # include(AddPerfect)
 include(AddGoogleBenchmark)
+include(AddRuy)
 include(AddXNNPACK)
 include(AddXTL)
 include(AddXSimd)
 include(AddXTensor)
-include(AddRuy)
 include(AddOnnxRuntime)
 
 
