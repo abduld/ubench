@@ -12,9 +12,6 @@ static void setInfoCounters(benchmark::State &state) {
   const auto N = state.range(1);
   const auto K = state.range(2);
 
-  auto aSize = M * K, bSize = K * N, cSize = M * N;
-  auto size = aSize * bSize * cSize;
-
   if (uint64_t cpufreq = benchmark::utils::GetCurrentCpuFrequency())
     state.counters["cpufreq"] = static_cast<double>(cpufreq);
 
@@ -23,23 +20,26 @@ static void setInfoCounters(benchmark::State &state) {
   state.counters["K"] = double(K);
   state.counters["flops"] = benchmark::Counter(
       double(2 * M * N * K), benchmark::Counter::kAvgThreadsRate);
-  state.counters["num_elements"] = double(size);
-  state.counters["num_elements/s"] = benchmark::Counter(
-      static_cast<double>(state.iterations()) * static_cast<double>(size),
-      benchmark::Counter::kIsRate);
 
-  size_t bytes_per_iteration = size_t(size) * sizeof(ElementType);
-  state.counters["bytes/s"] = benchmark::Counter(
-      static_cast<double>(state.iterations() * bytes_per_iteration),
-      benchmark::Counter::kIsRate);
+  // auto aSize = M * K, bSize = K * N, cSize = M * N;
+  // auto size = aSize * bSize * cSize;
+  // state.counters["num_elements"] = double(size);
+  // state.counters["num_elements/s"] = benchmark::Counter(
+  //     static_cast<double>(state.iterations()) * static_cast<double>(size),
+  //     benchmark::Counter::kIsRate);
+
+  // size_t bytes_per_iteration = size_t(size) * sizeof(ElementType);
+  // state.counters["bytes/s"] = benchmark::Counter(
+  //     static_cast<double>(state.iterations() * bytes_per_iteration),
+  //     benchmark::Counter::kIsRate);
 }
 
 // M, N, K
 
-#define ARGS ALL_ARGS
+#define ARGS VERY_SMALL_ARGS
 
 #define VERY_SMALL_ARGS()                                                      \
-  Args({1000, 1, 1})->Args({128, 169, 1728})->ArgNames({"M", "N", "K"})
+  Args({512, 512, 512})->Args({1024, 1024, 1024})->ArgNames({"M", "N", "K"})
 
 #define SMALL_ARGS()                                                           \
   Args({16, 16, 16})                                                           \
