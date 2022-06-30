@@ -36,7 +36,7 @@ static void setInfoCounters(benchmark::State &state) {
 
 // M, N, K
 
-#define ARGS ALL_ARGS
+#define ARGS VERY_SMALL_ARGS
 
 #define VERY_SMALL_ARGS()                                                      \
   Args({1000, 1, 1})->Args({128, 169, 1728})->ArgNames({"M", "N", "K"})
