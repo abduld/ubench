@@ -54,6 +54,7 @@ include(AddXTL)
 include(AddXSimd)
 include(AddXTensor)
 include(AddRuy)
+include(AddOnnxRuntime)
 
 
 find_package(OpenMP)
