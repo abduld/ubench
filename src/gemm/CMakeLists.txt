@@ -1,4 +1,4 @@
-set(SRCS clblas.cpp ruy.cpp mlas.cpp)
+set(SRCS cblas.cpp ruy.cpp mlas.cpp)
 
 if(TARGET Eigen3::Eigen)
   list(APPEND SRCS eigen.cpp)
