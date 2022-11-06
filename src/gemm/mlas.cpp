@@ -22,8 +22,8 @@ static void GEMM_MLAS(benchmark::State &state) {
 
   auto threadPool = nullptr;
   for (auto _ : state) {
-    MlasGemm(CblasNoTrans, CblasNoTrans, M, N, K, alpha, a.data(), K, b.data(),
-             N, beta, c.data(), N, threadPool);
+    MlasGemm(CblasNoTrans, CblasTrans, M, N, K, alpha, a.data(), K, b.data(), N,
+             beta, c.data(), N, threadPool);
   }
 
   setInfoCounters(state);
