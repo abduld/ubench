@@ -24,7 +24,7 @@ static void GEMM_Ruy(benchmark::State &state) {
 
   ruy::Matrix<ElementType> b;
   ruy::MakeSimpleLayout(static_cast<int>(K), static_cast<int>(N),
-                        ruy::Order::kRowMajor, b.mutable_layout());
+                        ruy::Order::kColMajor, b.mutable_layout());
   b.set_data(bVec.data());
 
   ruy::Matrix<ElementType> c;

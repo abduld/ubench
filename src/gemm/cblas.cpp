@@ -36,7 +36,7 @@ static void GEMM_cblas(benchmark::State &state) {
   std::fill(c.begin(), c.end(), zero);
 
   for (auto _ : state) {
-    cblasGEMMImpl(CblasNoTrans, CblasNoTrans, static_cast<int>(M),
+    cblasGEMMImpl(CblasNoTrans, CblasTrans, static_cast<int>(M),
                   static_cast<int>(N), static_cast<int>(K), alpha, a.data(),
                   b.data(), beta, c.data());
     benchmark::DoNotOptimize(c.data());

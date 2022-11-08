@@ -19,19 +19,22 @@ static void setInfoCounters(benchmark::State &state) {
   state.counters["N"] = double(N);
   state.counters["K"] = double(K);
   state.counters["flops"] = benchmark::Counter(
-      double(2 * M * N * K), benchmark::Counter::kAvgThreadsRate);
+      double(state.iterations()) * double(2 * M * N * K),
+      benchmark::Counter::kIsRate, ::benchmark::Counter::kIs1000);
 }
 
 // M, N, K
 
 // can also extend the args bellow to include params from
 // https://github.com/google/XNNPACK/blob/a9992250ee0f58ee9b26f8e4b7c2c82f358d3b34/bench/gemm.h
-#define ARGS()                                                                 \
-  ARG_INCEPTION_V3()                                                           \
-      ->ARG_MOBILENET_V3()                                                     \
-      ->ARG_RESNET50()                                                         \
-      ->ARG_SMALL_SIZES()                                                      \
-      ->ARG_MOBILEBERT()
+// #define ARGS() \
+//   ARG_INCEPTION_V3() \
+//       ->ARG_MOBILENET_V3() \
+//       ->ARG_RESNET50() \
+//       ->ARG_SMALL_SIZES() \
+//       ->ARG_MOBILEBERT()
+
+#define ARGS() Args({4096, 4096, 4096})
 
 #define ARG_INCEPTION_V3()                                                     \
   Args({22500, 32, 27})                                                        \

@@ -13,7 +13,7 @@ static void GEMM_Eigen(benchmark::State &state) {
   Eigen::MatrixXf c = Eigen::MatrixXf::Zero(M, N);
 
   for (auto _ : state) {
-    c.noalias() += a * b;
+    c.noalias() += a * b.transpose();
     benchmark::DoNotOptimize(c.data());
   }
 
